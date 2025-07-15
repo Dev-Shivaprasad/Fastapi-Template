@@ -1,24 +1,17 @@
 # psycopg2 : for postgresql
 # aioODBC : for mssql
-# import aioodbc
 from typing import Generator
-
-from sqlmodel import Session, SQLModel, create_engine
-
-
-DATABASE_URL = (
-    "mssql+pyodbc://@SHIVAPRASAD\\SQLEXPRESS/test"
-    "?driver=ODBC+Driver+17+for+SQL+Server"
-    "&trusted_connection=yes"
-    "&Encrypt=no"
-)
-
-engine = create_engine(DATABASE_URL, echo=True, future=True)
-
-SQLModel.metadata.create_all(engine)
+from sqlmodel import Session, create_engine
+from utils.helperfunctions import GetEnvVar
 
 
-# ✅ Correct FastAPI-compatible session dependency
+databaseurl = GetEnvVar("DATABASE_URL")
+engine = create_engine(databaseurl, echo=True, future=True)
+
+# no necessary as we are using alembic for DB migrations
+# SQLModel.metadata.create_all(engine)
+
+
 def get_session() -> Generator[Session, None, None]:
     session = Session(engine)
     try:

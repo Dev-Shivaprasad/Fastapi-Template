@@ -1,11 +1,16 @@
-from fastapi import FastAPI, responses, Depends, status
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from models.hero_model import hero
-from database.DB import Session, get_session
-from sqlmodel import select
-from authentication.auth import generate_jwt
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 
-app = FastAPI(title="Your app name")
+# from utils.helperfunctions import IsDevelopment
+from routes.heroes_routes import HeroesRoutes
+from routes.auth_routes import AuthRoutes
+
+security = HTTPBearer()
+
+version = "v1"
+app = FastAPI(title="TODO", description="", version=version)
+
 
 # CORS
 app.add_middleware(
@@ -23,44 +28,12 @@ app.add_middleware(
 # init_rate_limiter(app)
 
 # # Routes
-# app.include_router(example.router, prefix="/api")
 
 
 @app.get("/")
 def root():
-    responses.Response.set_cookie
-    return {"message": "Welcome to the FastAPI Boilerplate"}
+    return {"message": "Welcome to the Fullstack FastAPI Boilerplate"}
 
 
-@app.post("/PostHeros/", response_model=hero)
-def create_Hero(Hero: hero, session: Session = Depends(get_session)):
-    session.add(Hero)
-    session.commit()
-    session.refresh(Hero)
-    return Hero
-
-
-@app.get("/GetAllHeros")
-def get_Hero(session: Session = Depends(get_session)):
-    return session.exec(statement=select(hero)).all()
-
-
-@app.get("/GetSomeHeros/{id}")
-def get_Some_Hero(id: int, session: Session = Depends(get_session)):
-    daat = session.get_one(hero, id)
-    if not daat:
-        print(daat)
-        return {
-            "status": status.HTTP_204_NO_CONTENT,
-            "content": f"hero did not found with id {id}",
-        }
-    print(daat)
-    return daat
-
-
-@app.get("/jwt")
-async def sendjwt():
-    # Retrive data from the DB and embed it with the specfiv attributs
-    # It is better to create a Schema of the payload
-    data = {"userid": 123456, "username": "shivaprasad", "role": ["Admin", "user"]}
-    return await generate_jwt(payload=data)
+app.include_router(AuthRoutes, prefix="/api", tags=["Authentication"])
+app.include_router(HeroesRoutes, prefix="/api", tags=["Heros"])
