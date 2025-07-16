@@ -1,15 +1,21 @@
 from fastapi import FastAPI
+from fastapi.responses import ORJSONResponse
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from fastapi.security import HTTPBearer
+from uvicorn import run
+import os
+from math import ceil
 
 # from utils.helperfunctions import IsDevelopment
-from routes.heroes_routes import HeroesRoutes
+from routes.todo_routes import TodoRoutes
 from routes.auth_routes import AuthRoutes
 
 security = HTTPBearer()
 
 version = "v1"
-app = FastAPI(title="TODO", description="", version=version)
+app = FastAPI(
+    title="TODO", description="", version=version, default_response_class=ORJSONResponse
+)
 
 
 # CORS
@@ -36,4 +42,7 @@ def root():
 
 
 app.include_router(AuthRoutes, prefix="/api", tags=["Authentication"])
-app.include_router(HeroesRoutes, prefix="/api", tags=["Heros"])
+app.include_router(TodoRoutes, prefix="/api", tags=["TODO"])
+
+if __name__ == "__main__":
+    run(app="main:app", port=8080, workers=ceil((os.cpu_count() or 10) / 2))

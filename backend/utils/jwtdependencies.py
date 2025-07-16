@@ -1,7 +1,7 @@
 # utils/jwt_bearer.py
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from authentication.auth import verify_jwt  # Import your verify_jwt function
+from authentication.auth import verify_jwt
 
 security = HTTPBearer()
 

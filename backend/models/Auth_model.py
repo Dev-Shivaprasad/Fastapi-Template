@@ -1,18 +1,15 @@
-from sqlmodel import SQLModel, Field, Column, String
+from sqlmodel import SQLModel, Field
 
 from pydantic import EmailStr
 from uuid import uuid4, UUID
 
 
 class user(SQLModel, table=True):
-    UserId: UUID | None = Field(primary_key=True, default_factory=uuid4)
-    UserName: str
-    EmailId: EmailStr = Field(
-        sa_column=Column("EmailId", type_=String(255), unique=True, nullable=False)
-    )
-    Password: str
-
+    userid: UUID | None = Field(primary_key=True, default_factory=uuid4)
+    username: str
+    emailid: EmailStr = Field(unique=True, nullable=False, max_length=255)
+    password: str
 
 class login(SQLModel):
-    Email: EmailStr
-    Password: str
+    email: EmailStr
+    password: str

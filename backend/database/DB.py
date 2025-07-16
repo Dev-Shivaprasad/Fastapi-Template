@@ -8,7 +8,7 @@ from utils.helperfunctions import GetEnvVar
 databaseurl = GetEnvVar("DATABASE_URL")
 engine = create_engine(databaseurl, echo=True, future=True)
 
-# no necessary as we are using alembic for DB migrations
+# not necessary as we are using alembic for DB migrations
 # SQLModel.metadata.create_all(engine)
 
 
