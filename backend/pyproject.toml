@@ -3,7 +3,7 @@ name = "fastapi-tamplate"
 version = "0.1.0"
 description = "A Fullstack-FastApi template with all boilerplate Code and Configuration, including : 1. DataBase & ORM (SQLMODEL) 2. API (FASTAPI) 3. TypeSafety & MODEL (PYDANTIC) 4. Authentication (pyjwt)"
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.13"
 dependencies = [
     "alembic>=1.16.4",
     "bcrypt>=4.3.0",
