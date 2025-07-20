@@ -13,4 +13,5 @@ dependencies = [
     "pyodbc>=5.2.0",
     "python-dotenv>=1.1.1",
     "sqlmodel>=0.0.24",
+    "psycopg2-binary>=2.9.9",
 ]

@@ -45,4 +45,4 @@ app.include_router(AuthRoutes, prefix="/api", tags=["Authentication"])
 app.include_router(TodoRoutes, prefix="/api", tags=["TODO"])
 
 if __name__ == "__main__":
-    run(app="main:app", port=8000, workers=ceil((os.cpu_count() or 10) / 2))
+    run(app="main:app", host="0.0.0.0", port=8000, workers=ceil((os.cpu_count() or 10) / 2))

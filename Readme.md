@@ -43,8 +43,39 @@ or
 ```python
 uv run main.py
 ```
----
 
+## 🐳 Docker Setup
+
+For containerized development and deployment, we now provide comprehensive Docker support:
+
+### Quick Start with Docker
+
+**Development Environment:**
+```bash
+# Start development environment with hot reload
+docker-compose -f docker-compose.dev.yml up --build
+```
+
+**Production Environment:**
+```bash
+# Copy production environment template
+cp env.production.example .env.production
+# Edit .env.production with your values
+# Start production stack
+docker-compose --env-file .env.production --profile production up -d
+```
+
+### Docker Features
+- 🚀 **Multi-stage builds** for optimized production images
+- 🔄 **Hot reload** for development
+- 🗄️ **PostgreSQL** for production database
+- 🔒 **Nginx** reverse proxy with rate limiting
+- 📊 **Health checks** and monitoring
+- 🔐 **Security** best practices
+
+📖 **Full Docker documentation**: See [DOCKER.md](./DOCKER.md) for detailed setup and usage instructions.
+
+---
 
 # ✨ Features  
 - ⚡ FastAPI + Uvicorn — High-performance async API server
@@ -84,10 +115,17 @@ FASTAPI-TEMPLATE/
 │   ├── main.py``           ``# App entry point  
 │   ├── pyproject.toml``    ``# uv dependency definition   
 │   ├── uv.lock``           ``# Dependency lock file  
+│   ├── Dockerfile``        ``# Backend container definition  
+│   ├── .dockerignore``     ``# Docker build exclusions  
 │   └── README.md``         ``# Backend documentation  
 │  
 ├── frontend/``             ``# Optional frontend (React, Vue, etc.)  
 │  
+├── docker-compose.yml``    ``# Main Docker Compose configuration  
+├── docker-compose.dev.yml``# Development Docker Compose  
+├── nginx.conf``            ``# Nginx reverse proxy config  
+├── env.production.example``# Production environment template  
+├── DOCKER.md``             ``# Docker documentation  
 └── README.md``             ``# Main documentation  
 
 

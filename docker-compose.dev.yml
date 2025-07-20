@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  # FastAPI Backend (Development)
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: fastapi-backend-dev
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=sqlite:///./app.db
+      - JWT_SECRET_PHRASE=dev-secret-key
+      - DEVELOPMENT=true
+    volumes:
+      # Mount source code for hot reload
+      - ./backend:/app
+      # Exclude virtual environment and cache
+      - /app/.venv
+      - /app/__pycache__
+      - /app/.pytest_cache
+    networks:
+      - fastapi-dev-network
+    restart: unless-stopped
+    command: ["uv", "run", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # SQLite database (for development)
+  # Note: SQLite file is stored in a volume for persistence
+  sqlite:
+    image: alpine:latest
+    container_name: fastapi-sqlite-dev
+    volumes:
+      - sqlite_data:/data
+    networks:
+      - fastapi-dev-network
+    command: ["tail", "-f", "/dev/null"]
+
+networks:
+  fastapi-dev-network:
+    driver: bridge
+
+volumes:
+  sqlite_data: 
