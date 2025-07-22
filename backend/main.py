@@ -9,12 +9,18 @@ from math import ceil
 # from utils.helperfunctions import IsDevelopment
 from routes.todo_routes import TodoRoutes
 from routes.auth_routes import AuthRoutes
+from database.cache.rediscache import rediscachelifespan
 
 security = HTTPBearer()
 
+
 version = "v1"
 app = FastAPI(
-    title="TODO", description="", version=version, default_response_class=ORJSONResponse
+    title="TODO",
+    description="",
+    version=version,
+    default_response_class=ORJSONResponse,
+    lifespan=rediscachelifespan,
 )
 
 
@@ -26,6 +32,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 # # Middleware
 # app.add_middleware(logger)
