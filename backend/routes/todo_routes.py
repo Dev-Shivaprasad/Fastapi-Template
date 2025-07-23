@@ -3,11 +3,10 @@ from sqlmodel import select
 from models.todo_model import todo, todoDTO, priority, todostatus
 from database.DB import Session, get_session
 from utils.jwtdependencies import JWTBearer
-import orjson
 from database.cache.rediscache import (
     get_cache,
     invalidate_cache,
-    addorupdate_cache,
+    add_or_update_cache,
 )
 
 TodoRoutes = APIRouter(dependencies=[Depends(JWTBearer)])
@@ -38,9 +37,9 @@ async def create_todo(
     )
 
     # Update Redis cache
-    await addorupdate_cache(
+    await add_or_update_cache(
         request.app,
-        f"todos:{todo_data.taskid}",
+        f"todo:{todo_data.taskid}",
         dto.model_dump(),
         otherkeytoupdate="getalltodo",
     )
@@ -56,9 +55,9 @@ async def create_todo(
 async def get_all_todo(request: Request, session: Session = Depends(get_session)):
     cache_key = "getalltodo"
     cached = await get_cache(request.app, cache_key)
-    if cached:
+    if cached is not None:
         # Convert back to list of todoDTOs
-        todos_data = orjson.loads(cached)
+        todos_data = cached
         return todos_data
 
     # DB fallback
@@ -77,9 +76,7 @@ async def get_all_todo(request: Request, session: Session = Depends(get_session)
         for to in todos
     ]
 
-    await addorupdate_cache(
-        request.app, cache_key, orjson.dumps(returnabletodos).decode()
-    )
+    await add_or_update_cache(request.app, cache_key, returnabletodos)
     return returnabletodos
 
 
@@ -106,8 +103,8 @@ async def get_todo(
         taskpriority=priority(Todo.taskpriority).name,
         taskstatus=todostatus(Todo.taskstatus).name,
     ).model_dump()
-
-    await addorupdate_cache(request.app, cache_key, todo_data)
+    print(todo_data)
+    await add_or_update_cache(request.app, cache_key, Todo)
     return todo_data
 
 
@@ -130,7 +127,12 @@ async def update_todo(
     session.refresh(Todo)
 
     # Update cache
-    await addorupdate_cache(request.app, str(todo_id), Todo)
+    await add_or_update_cache(
+        request.app,
+        f"todo:{todo_id}",
+        updates.model_dump(),
+        otherkeytoupdate="getalltodo",
+    )
 
     return Todo
 
@@ -147,4 +149,5 @@ async def delete_hero(
     session.delete(Todo)
     session.commit()
     await invalidate_cache(request.app, f"todo:{todo_id}")
+    await invalidate_cache(request.app, "getalltodo")
     return None
