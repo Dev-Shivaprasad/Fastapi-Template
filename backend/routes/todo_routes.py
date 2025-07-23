@@ -5,10 +5,9 @@ from database.DB import Session, get_session
 from utils.jwtdependencies import JWTBearer
 import orjson
 from database.cache.rediscache import (
-    store_cache,
     get_cache,
     invalidate_cache,
-    update_cache,
+    addorupdate_cache,
 )
 
 TodoRoutes = APIRouter(dependencies=[Depends(JWTBearer)])
@@ -19,6 +18,13 @@ TodoRoutes = APIRouter(dependencies=[Depends(JWTBearer)])
 async def create_todo(
     request: Request, todo_data: todo, session: Session = Depends(get_session)
 ):
+    # The below if statement shows error just ignore it
+    if todo_data.taskpriority > 2 or todo_data.taskstatus > 2:  # type: ignore
+        raise HTTPException(
+            status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="taskpriority and taskstatus should be either : 0 = low | 1 : medium | 2 : High",
+        )
+
     session.add(todo_data)
     session.commit()
     session.refresh(todo_data)
@@ -32,9 +38,13 @@ async def create_todo(
     )
 
     # Update Redis cache
-    await update_cache(
-        request.app, f"todos:{todo_data.taskid}", dto.model_dump()
-    )  # Assuming you use list for todos
+    await addorupdate_cache(
+        request.app,
+        f"todos:{todo_data.taskid}",
+        dto.model_dump(),
+        otherkeytoupdate="getalltodo",
+    )
+    # Assuming you use list for todos
     # Optionally cache by ID too
     # redis_client.set(f"todo:{dto.taskid}", orjson.dumps(dto.model_dump()))
 
@@ -48,7 +58,7 @@ async def get_all_todo(request: Request, session: Session = Depends(get_session)
     cached = await get_cache(request.app, cache_key)
     if cached:
         # Convert back to list of todoDTOs
-        todos_data = orjson.loads(cached["data"])
+        todos_data = orjson.loads(cached)
         return todos_data
 
     # DB fallback
@@ -67,8 +77,8 @@ async def get_all_todo(request: Request, session: Session = Depends(get_session)
         for to in todos
     ]
 
-    await store_cache(
-        request.app, cache_key, {"data": orjson.dumps(returnabletodos).decode()}
+    await addorupdate_cache(
+        request.app, cache_key, orjson.dumps(returnabletodos).decode()
     )
     return returnabletodos
 
@@ -97,7 +107,7 @@ async def get_todo(
         taskstatus=todostatus(Todo.taskstatus).name,
     ).model_dump()
 
-    await store_cache(request.app, cache_key, todo_data)
+    await addorupdate_cache(request.app, cache_key, todo_data)
     return todo_data
 
 
@@ -120,7 +130,7 @@ async def update_todo(
     session.refresh(Todo)
 
     # Update cache
-    await update_cache(request.app, str(todo_id), Todo.__dict__)
+    await addorupdate_cache(request.app, str(todo_id), Todo)
 
     return Todo
 

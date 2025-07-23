@@ -19,10 +19,8 @@ class todo(SQLModel, table=True):
     taskid: int | None = Field(default=None, sa_type=Integer, primary_key=True)
     task: str
     taskdescription: Optional[str]
-    taskstatus: todostatus | None = Field(
-        default=todostatus.Pending.value, sa_type=Integer
-    )
-    taskpriority: priority | None = Field(default=priority.Low.value, sa_type=Integer)
+    taskstatus: todostatus = Field(default=todostatus.Pending.value, sa_type=Integer)
+    taskpriority: priority = Field(default=priority.Low.value, sa_type=Integer)
 
 
 class todoDTO(SQLModel):

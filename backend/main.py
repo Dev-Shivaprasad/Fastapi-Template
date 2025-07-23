@@ -9,7 +9,7 @@ from math import ceil
 # from utils.helperfunctions import IsDevelopment
 from routes.todo_routes import TodoRoutes
 from routes.auth_routes import AuthRoutes
-from database.cache.rediscache import rediscachelifespan
+from database.cache.rediscache import rediscachelifecycle
 
 security = HTTPBearer()
 
@@ -20,7 +20,7 @@ app = FastAPI(
     description="",
     version=version,
     default_response_class=ORJSONResponse,
-    lifespan=rediscachelifespan,
+    lifespan=rediscachelifecycle,
 )
 
 
@@ -46,6 +46,7 @@ app.add_middleware(
 @app.get("/")
 def root():
     return {"message": "Welcome to the Fullstack FastAPI Boilerplate"}
+    
 
 
 app.include_router(AuthRoutes, prefix="/api", tags=["Authentication"])
