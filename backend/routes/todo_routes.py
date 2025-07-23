@@ -3,13 +3,15 @@ from sqlmodel import select
 from models.todo_model import todo, todoDTO, priority, todostatus
 from database.DB import Session, get_session
 from utils.jwtdependencies import JWTBearer
-from database.cache.rediscache import (
+from ratelimiter.customratelimiter import init_rate_limiter, burst_proof_ratelimit
+from database.cachelayer.rediscache import (
     get_cache,
     invalidate_cache,
     add_or_update_cache,
 )
 
 TodoRoutes = APIRouter(dependencies=[Depends(JWTBearer)])
+ratelimiter = init_rate_limiter()
 
 
 # Create todo
@@ -52,6 +54,7 @@ async def create_todo(
 
 # Get all todos
 @TodoRoutes.get("/getalltodo/")
+@burst_proof_ratelimit(ratelimiter, "2/second")
 async def get_all_todo(request: Request, session: Session = Depends(get_session)):
     cache_key = "getalltodo"
     cached = await get_cache(request.app, cache_key)
@@ -82,6 +85,7 @@ async def get_all_todo(request: Request, session: Session = Depends(get_session)
 
 # Get single Todo
 @TodoRoutes.get("/getatodo/{todo_id}")
+@ratelimiter.limit("1/second", per_method=True)
 async def get_todo(
     todo_id: int, request: Request, session: Session = Depends(get_session)
 ):

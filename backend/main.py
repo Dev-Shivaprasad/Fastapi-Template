@@ -5,20 +5,23 @@ from fastapi.security import HTTPBearer
 from uvicorn import run
 import os
 from math import ceil
+from utils.helperfunctions import is_development
 
 # from utils.helperfunctions import IsDevelopment
 from routes.todo_routes import TodoRoutes
 from routes.auth_routes import AuthRoutes
-from database.cache.rediscache import rediscachelifecycle
+from database.cachelayer.rediscache import rediscachelifecycle
 
 security = HTTPBearer()
-
+swaggerenabled = is_development()
 
 version = "v1"
 app = FastAPI(
     title="TODO",
     description="",
     version=version,
+    docs_url=swaggerenabled,
+    redoc_url=swaggerenabled,
     default_response_class=ORJSONResponse,
     lifespan=rediscachelifecycle,
 )
@@ -46,7 +49,6 @@ app.add_middleware(
 @app.get("/")
 def root():
     return {"message": "Welcome to the Fullstack FastAPI Boilerplate"}
-    
 
 
 app.include_router(AuthRoutes, prefix="/api", tags=["Authentication"])

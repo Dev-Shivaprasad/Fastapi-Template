@@ -5,3 +5,9 @@ DATABASE_URL = postgresql+psycopg2://UN:PASS@localhost/<DB_NAME>
 DEVELOPMENT = true
 
 REDIS_URI = redis://localhost:PORT
+
+RATELIMITER_STORAGE_URI = memory://
+
+CACHE_ENABLED = true
+
+RATELIMITER_ENABLED = true

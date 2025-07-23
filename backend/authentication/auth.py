@@ -1,8 +1,8 @@
 import jwt
 import datetime
-from utils.helperfunctions import GetEnvVar
+from utils.helperfunctions import get_env_var
 
-SECRET_KEY = str(GetEnvVar("JWT_SECRET_PHRASE"))
+SECRET_KEY = str(get_env_var("JWT_SECRET_PHRASE"))
 
 
 # Function to generate a JWT
@@ -58,25 +58,3 @@ def verify_jwt(token: str) -> dict:
     except Exception as e:
         print(f"Error verifying/decoding JWT: {e}")
         return {"status": False, "statement": f"Error verifying/decoding JWT: {e}"}
-
-
-# # Example Usage
-# if __name__ == "__main__":
-#     # Example payload
-#     payload_data = {
-#         "user_id": 123,
-#         "username": "testuser",
-#         "roles": ["admin", "editor"],
-#     }
-
-#     # Generate the JWT
-#     jwt_token = generate_jwt(payload_data, expiration_minutes=60)
-
-#     if jwt_token:
-#         print(f"Generated JWT: {jwt_token}")
-
-#         # Simulate verifying the token
-#         # decoded_data = verify_jwt(jwt_token)
-
-#         if decoded_data:
-#             print(f"Decoded JWT payload: {decoded_data}")

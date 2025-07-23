@@ -3,9 +3,9 @@ from redis.asyncio import Redis
 from fastapi import FastAPI
 import orjson
 from contextlib import asynccontextmanager
-from utils.helperfunctions import GetEnvVar
+from utils.helperfunctions import get_env_var
 
-cacheurl: str = GetEnvVar("REDIS_URI")
+cacheurl: str = get_env_var("REDIS_URI")
 
 
 @asynccontextmanager
