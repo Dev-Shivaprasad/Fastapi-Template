@@ -96,13 +96,11 @@ FASTAPI-TEMPLATE/
 ### 🧩 Future Enhancements  
 Here’s what’s planned or coming soon:  
 
-- [ ] Rate Limiting — Prevent abuse & DoS
+- [x] Rate Limiting — Prevent abuse & DoS
 
-- [ ] OAuth Integration — Google, GitHub login
+- [x] Docker — Dockerfile & docker-compose setup
 
-- [ ] Docker — Dockerfile & docker-compose setup
-
-- [ ] Redis — Caching layer
+- [x] Redis — Caching layer
  
 ---  
 
