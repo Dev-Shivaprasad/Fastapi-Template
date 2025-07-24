@@ -1,0 +1,84 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: docker/Dockerfile
+    container_name: fastapi-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=${DATABASE_URL:-sqlite:///./app.db}
+      - JWT_SECRET_PHRASE=${JWT_SECRET_PHRASE:-your-secret-key-change-in-production}
+      - DEVELOPMENT=${DEVELOPMENT:-true}
+    volumes:
+      - ./backend:/app
+      - /app/.venv
+      - /app/__pycache__
+    networks:
+      - fastapi-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: fastapi-postgres
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB:-fastapi_db}
+      - POSTGRES_USER=${POSTGRES_USER:-fastapi_user}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-fastapi_password}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - fastapi-network
+    restart: unless-stopped
+    profiles:
+      - production
+
+  # Redis Cache (optional)
+  redis:
+    image: redis:7-alpine
+    container_name: fastapi-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - fastapi-network
+    restart: unless-stopped
+    profiles:
+      - production
+
+  # Nginx Reverse Proxy (for production)
+  nginx:
+    image: nginx:alpine
+    container_name: fastapi-nginx
+    ports:
+      - "${NGINX_PORT:-80}:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - backend
+    networks:
+      - fastapi-network
+    restart: unless-stopped
+    profiles:
+      - production
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  fastapi-network:
+    driver: bridge 

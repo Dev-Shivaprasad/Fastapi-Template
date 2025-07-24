@@ -1,6 +1,7 @@
 from os import getenv
 from dotenv import load_dotenv
 import re
+from bcrypt import gensalt, hashpw, checkpw
 
 # Load environment variables from the .env file
 load_dotenv()
@@ -63,3 +64,15 @@ def is_development():
         ```
     """
     return "/docs" if get_env_var("DEVELOPMENT").lower() == "true" else None
+
+
+async def hashpassword(password: str) -> str:
+    """Hash a plaintext password using bcrypt."""
+    bytepassword = password.encode("utf-8")
+    hashedpassword = hashpw(password=bytepassword, salt=gensalt())
+    return hashedpassword.decode("utf-8")
+
+
+async def verifypassword(password: str, hashedpassword: str) -> bool:
+    """Verify a plaintext password against a stored bcrypt hash."""
+    return checkpw(password.encode("utf-8"), hashedpassword.encode("utf-8"))
