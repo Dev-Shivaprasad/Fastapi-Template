@@ -10,7 +10,7 @@ AuthRoutes = APIRouter()
 
 @AuthRoutes.post("/login/")
 async def logindef(userdata: login, session: Session = Depends(get_session)):
-    # Retrive data from the DB and embed it with the specfiv attributs
+    # Retrive data from the DB and embed it with the specfic attributs
     # It is better to create a Schema of the payload
 
     data = session.exec(select(user).where(user.emailid == userdata.email)).first()
