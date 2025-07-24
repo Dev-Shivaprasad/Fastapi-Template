@@ -15,4 +15,5 @@ dependencies = [
     "redis>=6.2.0",
     "slowapi>=0.1.9",
     "sqlmodel>=0.0.24",
+    "psycopg2-binary>=2.9.9",
 ]
