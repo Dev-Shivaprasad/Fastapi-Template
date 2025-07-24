@@ -1,7 +1,7 @@
 [project]
 name = "fastapi-tamplate"
 version = "0.1.0"
-description = "A Fullstack-FastApi template with all boilerplate Code and Configuration, including : 1. DataBase & ORM (SQLMODEL) 2. API (FASTAPI) 3. TypeSafety & MODEL (PYDANTIC) 4. Authentication (pyjwt)"
+description = "A simple and fast FastAPI backend template with JWT auth, SQLModel ORM, Alembic migrations, orjson, Redis caching, rate limiting and secure configuration — built for speed, security, and ease of use. Runs on Uvicorn with worker support for better concurrency."
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
@@ -15,5 +15,4 @@ dependencies = [
     "redis>=6.2.0",
     "slowapi>=0.1.9",
     "sqlmodel>=0.0.24",
-    "psycopg2-binary>=2.9.9",
 ]
