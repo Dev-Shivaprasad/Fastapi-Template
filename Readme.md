@@ -19,34 +19,39 @@ uv sync
 ```
 
 ### 3. ⚙️ Create .env file and copy all variables
-- There is already a file is provided called ```example_env.txt``` which contains all the necessary variables just replace them.   
-  
+
+- There is already a file is provided called `example_env.txt` which contains all the necessary variables just replace them.
+
 ```bash
 (Linux) cp example_env.txt .env
 (Windows) copy example_env.txt .env
 ```
 
 ### 4. 🔄 Run migrations
-- All the DataBase table schemas and models are stored in the ```models/``` folder      
-  
+
+- All the DataBase table schemas and models are stored in the `models/` folder
+
 ```bash
 alembic upgrade head
 ```
->use ```alembic revision --autogenerate -m <name_of_the_migration>``` to create the migration  
-or  
- ```alembic revision -m <name_of_the_migration>``` for  empty migration  
+
+> use `alembic revision --autogenerate -m <name_of_the_migration>` to create the migration  
+> or  
+>  `alembic revision -m <name_of_the_migration>` for empty migration
 
 ### 5. 🚀 Run the server
-> All the necessary server configuration is done in the ```main.py``` file   
-> docs / Swagger UI is locally hosted on this link  ```http:*/localhost:*000/docs``` 
+
+> All the necessary server configuration is done in the `main.py` file  
+> docs / Swagger UI is locally hosted on this link `http:*/localhost:*000/docs`
 
 ```python
 uv run main.py
 ```
+
 ---
 
+# ✨ Features
 
-# ✨ Features  
 - ⚡ FastAPI + Uvicorn — High-performance async API server
 
 - 🔗 SQLModel — ORM by the creator of FastAPI (based on SQLAlchemy)
@@ -69,55 +74,57 @@ uv run main.py
 
 FASTAPI-TEMPLATE/  
 │  
-├── backend/    
-│   ├── alembic``           ``# Alembic migration files  
-│   ├── authentication/``   ``# JWT logic, login, password hashing  
-│   ├── database/``         ``# DB session setup and initialization  
-│   ├── models/``           ``# SQLModel ORM models  
-│   ├── routes/``           ``# API route handlers  
-│   ├── templates/``        ``# Jinja templates (optional)  
-│   ├── utils/``            ``# Helper functions  
-│   ├── .venv/``            ``# uv-managed virtual environment  
-│   ├── .python-version``   ``# Python version pin  
-│   ├── alembic.ini``       ``# Alembic configuration  
-│   ├── example_env.txt``   ``# Example .env file  
-│   ├── main.py``           ``# App entry point  
-│   ├── pyproject.toml``    ``# uv dependency definition   
-│   ├── uv.lock``           ``# Dependency lock file  
-│   └── README.md``         ``# Backend documentation  
+├── backend/  
+│ ├── alembic`           `# Alembic migration files  
+│ ├── authentication/`   `# JWT logic, login, password hashing  
+│ ├── database/`         `# DB session setup and initialization  
+│ │ └─ cachelayer/`  `# redis cache setup and initialization  
+│ ├── models/`           `# SQLModel ORM models  
+│ ├── ratelimiter/`      `# ratelimiter setup and initialization  
+│ ├── routes/`           `# API route handlers  
+│ ├── templates/`        `# router tamplate (optional)  
+│ ├── utils/`            `# Helper functions  
+│ ├── .venv/`            `# uv-managed virtual environment  
+│ ├── .python-version`   `# Python version pin  
+│ ├── alembic.ini`       `# Alembic configuration  
+│ ├── example_env.txt`   `# Example .env file  
+│ ├── main.py`           `# App entry point  
+│ ├── pyproject.toml`    `# uv dependency definition  
+│ └── uv.lock`           `# Dependency lock file  
 │  
-├── frontend/``             ``# Optional frontend (React, Vue, etc.)  
+├── frontend/`             `# Optional frontend (React, Vue, etc.)  
 │  
-└── README.md``             ``# Main documentation  
-
+└── README.md`             `# Main documentation
 
 ---
 
-### 🧩 Future Enhancements  
-Here’s what’s planned or coming soon:  
+### 🧩 Future Enhancements
 
-- [ ] Rate Limiting — Prevent abuse & DoS
+Here’s what’s planned or coming soon:
 
-- [ ] OAuth Integration — Google, GitHub login
+- [x] Rate Limiting — Prevent abuse & DoS
 
-- [ ] Docker — Dockerfile & docker-compose setup
+- [x] Nginx — secure routing and abstraction
 
-- [ ] Redis — Caching layer
- 
----  
+- [x] Docker — Dockerfile & docker-compose setup
+
+- [x] Redis — Caching layer
+
+---
 
 ### 💡 Frontend?
-- The frontend/ folder is a placeholder — use it with any frontend framework like:  
-  
+
+- The frontend/ folder is a placeholder — use it with any frontend framework like:
 - ⚛️ React / Next.js
 
 - 🔥 Vue / Nuxt
 
 - 🌌 Astro / SvelteKit
 
-You can ~~remove~~ it if not required.
+You can ~~remove~~ it if not needed.
 
 ---
-# 🙌 Contributions  
+
+# 🙌 Contributions
 
 Feel free to open issues, suggest improvements, or submit a pull request. Let’s make this great together 😊.
