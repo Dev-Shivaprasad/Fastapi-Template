@@ -3,7 +3,7 @@
 
 from typing import Generator
 from sqlmodel import Session, create_engine
-from utils.helperfunctions import get_env_var
+from core.helperfunctions import get_env_var
 
 databaseurl = get_env_var("DATABASE_URL")
 

@@ -1,21 +1,21 @@
 from fastapi import APIRouter, Depends, status, HTTPException, Request
 from sqlmodel import select
-from models.todo_model import todo, todoDTO, priority, todostatus
-from database.DB import Session, get_session
-from utils.jwtdependencies import JWTBearer
-from ratelimiter.customratelimiter import init_rate_limiter, burst_proof_ratelimit
-from database.cachelayer.rediscache import (
+from src.models.todo_model import todo, todoDTO, priority, todostatus
+from core.database.DB import Session, get_session
+from services.jwtdependencies import JWTBearer
+from core.ratelimiter.customratelimiter import init_rate_limiter, burst_proof_ratelimit
+from core.cache.rediscache import (
     get_cache,
     invalidate_cache,
     add_or_update_cache,
 )
 
-TodoRoutes = APIRouter(dependencies=[Depends(JWTBearer)])
+TodoRoutes = APIRouter(dependencies=[Depends(JWTBearer)], prefix="/todo")
 ratelimiter = init_rate_limiter()
 
 
 # Create todo
-@TodoRoutes.post("/todo/", status_code=status.HTTP_201_CREATED)
+@TodoRoutes.post("/addtodo/", status_code=status.HTTP_201_CREATED)
 async def create_todo(
     request: Request, todo_data: todo, session: Session = Depends(get_session)
 ):
@@ -107,8 +107,7 @@ async def get_todo(
         taskpriority=priority(Todo.taskpriority).name,
         taskstatus=todostatus(Todo.taskstatus).name,
     ).model_dump()
-    print(todo_data)
-    await add_or_update_cache(request.app, cache_key, Todo)
+    await add_or_update_cache(request.app, cache_key, Todo.model_dump())
     return todo_data
 
 

@@ -1,9 +1,8 @@
-import redis.asyncio as redis
 from redis.asyncio import Redis
 from fastapi import FastAPI
 import orjson
 from contextlib import asynccontextmanager
-from utils.helperfunctions import get_env_var
+from core.helperfunctions import get_env_var
 
 # Redis connection URL, loaded from environment variables
 cacheurl: str = get_env_var("REDIS_URI")
@@ -11,6 +10,7 @@ cacheurl: str = get_env_var("REDIS_URI")
 # Global toggle to enable/disable caching across the application
 # Set `CACHE_ENABLED=false` in environment variables to disable caching
 CACHE_ENABLED = get_env_var("CACHE_ENABLED", "true").lower() == "true"
+
 
 
 @asynccontextmanager
@@ -30,6 +30,8 @@ async def rediscachelifecycle(app: FastAPI):
     Yields:
         None: Allows FastAPI to continue startup/shutdown sequence.
     """
+    import redis.asyncio as redis
+
     if not CACHE_ENABLED:
         print("Redis cache disabled globally.")
         yield
@@ -108,7 +110,7 @@ async def add_or_update_cache(
     if not CACHE_ENABLED:
         return
     redis_client: Redis = app.state.redis
-    data = orjson.dumps(value).decode()
+    data = orjson.dumps(value)
 
     # Store the main data under the given key
     await redis_client.set(key, data)

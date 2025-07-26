@@ -1,6 +1,6 @@
 from slowapi import Limiter
 from slowapi.util import get_remote_address
-from utils.helperfunctions import get_env_var
+from core.helperfunctions import get_env_var
 
 
 def init_rate_limiter(strategy: str | None = "fixed-window") -> Limiter:

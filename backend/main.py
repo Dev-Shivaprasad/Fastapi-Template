@@ -5,12 +5,13 @@ from fastapi.security import HTTPBearer
 from uvicorn import run
 import os
 from math import ceil
-from utils.helperfunctions import is_development
+from core.helperfunctions import is_development
+from src.controllers.todo_routes import TodoRoutes
+from src.controllers.auth_routes import AuthRoutes
+from core.cache.rediscache import rediscachelifecycle
 
-# from utils.helperfunctions import IsDevelopment
-from routes.todo_routes import TodoRoutes
-from routes.auth_routes import AuthRoutes
-from database.cachelayer.rediscache import rediscachelifecycle
+workers = ceil((os.cpu_count() or 10))
+print(f"using all : {workers} : workers")
 
 security = HTTPBearer()
 swaggerenabled = is_development()
@@ -37,13 +38,7 @@ app.add_middleware(
 )
 
 
-# # Middleware
-# app.add_middleware(logger)
-
-# Rate Limiter
-# init_rate_limiter(app)
-
-# # Routes
+# Routes
 
 
 @app.get("/")
@@ -51,8 +46,13 @@ def root():
     return {"message": "Welcome to the Fullstack FastAPI Boilerplate"}
 
 
-app.include_router(AuthRoutes, prefix="/api", tags=["Authentication"])
-app.include_router(TodoRoutes, prefix="/api", tags=["TODO"])
+app.include_router(AuthRoutes, prefix="/api/v1", tags=["Authentication"])
+app.include_router(TodoRoutes, prefix="/api/v1", tags=["TODO"])
 
 if __name__ == "__main__":
-    run(app="main:app", host="0.0.0.0", port=8000, workers=ceil((os.cpu_count() or 10) / 2))
+    run(
+        app="main:app",
+        host="0.0.0.0",
+        port=8000,
+        workers=workers,
+    )

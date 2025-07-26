@@ -1,6 +1,6 @@
 import jwt
 import datetime
-from utils.helperfunctions import get_env_var
+from core.helperfunctions import get_env_var
 
 SECRET_KEY = str(get_env_var("JWT_SECRET_PHRASE"))
 

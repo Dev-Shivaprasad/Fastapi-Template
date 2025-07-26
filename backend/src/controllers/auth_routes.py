@@ -1,11 +1,11 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-from utils.helperfunctions import is_valid_email, hashpassword, verifypassword
-from authentication.auth import generate_jwt
-from database.DB import Session, get_session
+from core.helperfunctions import is_valid_email, hashpassword, verifypassword
+from core.authentication.auth import generate_jwt
+from core.database.DB import Session, get_session
 from sqlmodel import select
-from models.Auth_model import login, user
+from src.models.Auth_model import login, user
 
-AuthRoutes = APIRouter()
+AuthRoutes = APIRouter(prefix="/auth")
 
 
 @AuthRoutes.post("/login/")

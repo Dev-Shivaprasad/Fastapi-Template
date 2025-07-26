@@ -1,12 +1,3 @@
-from os import getenv
-from dotenv import load_dotenv
-import re
-from bcrypt import gensalt, hashpw, checkpw
-
-# Load environment variables from the .env file
-load_dotenv()
-
-
 def is_valid_email(email: str) -> bool:
     """
     Validate whether the provided email address matches a basic pattern.
@@ -24,6 +15,8 @@ def is_valid_email(email: str) -> bool:
             - A dot followed by a valid TLD (e.g., .com, .org)
         - Does not perform deep validation (e.g., MX record lookup).
     """
+    import re
+
     pattern = r"^[\w\.-]+@[\w\.-]+\.\w+$"
     return re.match(pattern, email) is not None
 
@@ -44,6 +37,12 @@ def get_env_var(varname: str, default: str = "") -> str:
         db_url = get_env_var("DATABASE_URL", "sqlite:///default.db")
         ```
     """
+
+    from os import getenv
+    from dotenv import load_dotenv
+
+    load_dotenv()
+
     return getenv(varname, default=default)
 
 
@@ -68,6 +67,9 @@ def is_development():
 
 async def hashpassword(password: str) -> str:
     """Hash a plaintext password using bcrypt."""
+
+    from bcrypt import gensalt, hashpw
+
     bytepassword = password.encode("utf-8")
     hashedpassword = hashpw(password=bytepassword, salt=gensalt())
     return hashedpassword.decode("utf-8")
@@ -75,4 +77,16 @@ async def hashpassword(password: str) -> str:
 
 async def verifypassword(password: str, hashedpassword: str) -> bool:
     """Verify a plaintext password against a stored bcrypt hash."""
+
+    from bcrypt import checkpw
+
     return checkpw(password.encode("utf-8"), hashedpassword.encode("utf-8"))
+
+
+__all__ = [
+    "is_valid_email",
+    "get_env_var",
+    "is_development",
+    "hashpassword",
+    "verifypassword",
+]
