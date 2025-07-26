@@ -85,34 +85,45 @@ uv run main.py
 FASTAPI-TEMPLATE/  
 │  
 ├── backend/  
-│ ├── alembic`              `# Alembic migration files  
-│ ├── authentication/`      `# JWT logic, login, password hashing  
-│ ├── database/`            `# DB session setup and initialization  
-│ │ └─ cachelayer/`         `# redis cache setup and initialization **(optional)**  
-│ ├── docker/`              `# Docker Backend files **(optional)**  
-│ │ ├─ .dockerignore`       `# Docker build exclusions  
-│ │ └─ .Dockerfile`         `# Backend container definition  
-│ ├── models/`              `# SQLModel ORM models  
-│ ├── ratelimiter/`         `# ratelimiter setup and initialization **(optional)**  
-│ ├── routes/`              `# API route handlers  
-│ ├── templates/`           `# router tamplate **(optional)**  
-│ ├── utils/`               `# Helper functions  
-│ ├── .venv/`               `# uv-managed virtual environment  
-│ ├── .python-version`      `# Python version pin  
-│ ├── alembic.ini`          `# Alembic configuration  
-│ ├── example_env.txt`      `# Example .env file  
-│ ├── main.py`              `# App entry point  
-│ ├── pyproject.toml`       `# uv dependency definition  
-│ └── uv.lock`              `# Dependency lock file  
-│  
-├── frontend/`              `# Optional frontend (React, Vue, etc.)  
+│ ├── .venv/`                `# uv-managed virtual environment  
+│ │  
+│ ├── alembic`               `# Alembic migration files  
+│ │  
+│ ├── core  
+│ │├─ authentication/`        `# JWT logic, login, password hashing  
+│ │├─ cache/`                 `# redis cache setup and initialization **(optional)**  
+│ │├─ database/`              `# DB session setup and initialization  
+│ │├─ ratelimiter/`           `# ratelimiter setup and initialization **(optional)**  
+│ │└─ helperfunctions.py`     `# contains helper functions  
+│ │  
+│ ├── docker/ **(optional)**  
+│ │ ├─ .dockerignore`         `# Docker build exclusions  
+│ │ └─ .Dockerfile`           `# Backend container definition  
+│ │
+│ ├── services/`              `# contains services (like JWT middleware) for business logic and operations.  
+│ │  
+│ ├── src/  
+│ │ ├─ controllers/`          `# API route handlers  
+│ │ ├─ models/`               `# SQLModel ORM models  
+│ │ └─ ControllerTemplate.py` `# controller boilerplate  
+│ │  
+│ ├── .env.backup`            `# a demo .env  
+│ ├── .gitignore`             `# File specifying untracked files to ignore.  
+│ ├── .python-version`        `# Python version pin  
+│ ├── alembic.ini`            `# Alembic configuration  
+│ ├── main.py`                `# App entry point  
+│ ├── pyproject.toml`         `# uv dependency definition  
+│ └── uv.lock`                `# Dependency lock file  
 │  
 ├── docker_and_nginix_configurations/ **(optional)**  
-│ ├── docker-compose.yml`     `# Main Docker Compose configuration  
+│ ├── env.production`         `# Production environment  
 │ ├── docker-compose.dev.yml` `# Development Docker Compose  
-│ ├── nginx.conf`             `# Nginx reverse proxy config  
+│ ├── docker-compose.yml`     `# Main Docker Compose configuration  
+│ ├── DOCKER.md`              `# Docker documentation  
 │ ├── env.production.example` `# Production environment template  
-│ └── DOCKER.md`              `# Docker documentation  
+│ └── nginx.conf`             `# Nginx reverse proxy config  
+│  
+├── frontend/`              `# Optional frontend (React, Vue, etc.)  
 │  
 └── README.md`              `# Main documentation
 
@@ -150,7 +161,7 @@ docker-compose --env-file ./docker_and_nginix_configurations/.env.production --p
 - 📊 **Health checks** : and monitoring
 - 🔐 **Security** : best practices
 
-📖 **Full Docker documentation**: See [DOCKER.md](./docker_and_nginx_configurations/DOCKER.md) for detailed setup and usage instructions.
+📖 **Full Docker documentation**: See [DOCKER.md](./docker_and_nginix_configurations/DOCKER.md) for detailed setup and usage instructions.
 
 ---
 
